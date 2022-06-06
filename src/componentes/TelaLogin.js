@@ -1,13 +1,14 @@
 import React from 'react';
+import UserContext from '../util/UserContext';
+import TokenContext from '../util/TokenContext'; 
+import EscolhaPlanoContext from '../util/EscolhaPlanoContext';
 import styled from 'styled-components';
 import axios from 'axios';
 import DRIVENPLUS from '../assets/img/DRIVENPLUS.png'
 import { Link } from 'react-router-dom';
 import { useState, useContext } from 'react';
 import { useNavigate } from 'react-router';
-import UserContext from '../util/UserContext';
-import TokenContext from '../util/TokenContext'; 
-import EscolhaPlanoContext from '../util/EscolhaPlanoContext';
+
 export default function TelaLogin () {
      const navigate = useNavigate();
      const [email, setEmail] = useState('');
@@ -15,18 +16,20 @@ export default function TelaLogin () {
         
      const {token, setToken} = useContext(TokenContext);
      const {user, setUser} = useContext(UserContext);
-     const {EscolhaPlano, setEscolhaPlanoContext} = useContext(EscolhaPlanoContext);
+     const {EscolhaPlano, setEscolhaPlano} = useContext(EscolhaPlanoContext);
      function checando (event) {
         event.preventDefault();
         let login = axios.post(
-           ' https://mock-api.driven.com.br/api/v4/driven-plus/auth/login',
-           {password,
-            email}  //react-router-dom  styled-components
+           'https://mock-api.driven.com.br/api/v4/driven-plus/auth/login',
+           {
+             email,
+            password
+          }  //react-router-dom  styled-components
         );
         login.then(res =>{
             setToken(res.data.token)
             setUser(res.data)  
-            setEscolhaPlanoContext(res.data.membership)
+            setEscolhaPlano(res.data.membership)
          if(res.data.membership === null) {
              navigate('/escolha-plano')
          } else {
@@ -34,6 +37,8 @@ export default function TelaLogin () {
          }
      
         })
+        login.catch(res => alert('Ocorreu um erro. ' + res))
+        
      }
     return (
         <>
@@ -43,15 +48,16 @@ export default function TelaLogin () {
             type='email'
             placeholder='E-mail'
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(event) => setEmail(event.target.value)}
           />
           <input
             type='password'
             placeholder='password'
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(event) => setPassword(event.target.value)}
           />
-          <button>ENTRAR</button>
+          <button >ENTRAR</button>
+          
         </StyledForm>
         <StyledLink to='/cadastro'>Não possui uma conta? Cadastre-se</StyledLink>
      </>
@@ -65,9 +71,9 @@ const StyledLink = styled(Link)`
   display: flex;
   justify-content: center;
   margin-top: 24px;
-  color: red;
+  color: #ffffff;
   :visited {
-    color: pink;
+    color: #ffffff;
   }
 `;
 const StyledForm = styled.form`

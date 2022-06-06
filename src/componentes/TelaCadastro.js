@@ -18,8 +18,8 @@ export default function TelaCadastro() {
   //const [image, setImage] = useState('');
   //const [isLoading, setIsloading] = useState(false);
 
-  function checandoCadastro(e) {
-    e.preventDefault();
+  function checandoCadastro(event) {
+    event.preventDefault();
     let pCadastro = axios.post(
         'https://mock-api.driven.com.br/api/v4/driven-plus/auth/sign-up',
         {
